@@ -40,13 +40,13 @@ public class SendEmailServiceAPI {
 			if (!cc.isEmpty()) {
 				mimeMessageHelper.setCc(InternetAddress.parse(cc));
 			}
-			mimeMessageHelper.setText(body);
+			mimeMessageHelper.setText("", body);
 			mimeMessageHelper.setSubject(message);
 			String path = env.getProperty("mail.attachment.path");
 			File file = null;
 			List<File> files = new ArrayList<>();
-			if (!attachment.isEmpty()) {
-				for (MultipartFile uploadedFile : attachment) {
+			for (MultipartFile uploadedFile : attachment) {
+				if (uploadedFile.isEmpty() == false && uploadedFile.getSize() != 0) {
 					file = new File(path + uploadedFile.getOriginalFilename());
 					files.add(file);
 					uploadedFile.transferTo(file);
@@ -54,7 +54,7 @@ public class SendEmailServiceAPI {
 				}
 			}
 			javaMailSender.send(mimeMessage);
-			if (!attachment.isEmpty()) {
+			if (files.isEmpty() == false && files.size() != 0) {
 				for (File deleteFile : files) {
 					deleteFile.delete();
 				}

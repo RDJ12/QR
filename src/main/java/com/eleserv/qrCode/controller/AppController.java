@@ -121,6 +121,7 @@ public class AppController {
 		}
 	}
 
+	@CrossOrigin(origins = "http://localhost:8080")
 	@PostMapping(value = "/sendmail", consumes = "multipart/form-data")
 	public ResponseEntity<String> sendMail(@RequestParam List<MultipartFile> attachment, @RequestParam String to,
 			@RequestParam String cc, @RequestParam String message, @RequestParam String body) {
