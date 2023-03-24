@@ -1,12 +1,9 @@
 package com.eleserv.qrCode.reposistory;
 
-import com.eleserv.qrCode.entity.CCCRM;
-import com.eleserv.qrCode.entity.Leads;
-import com.eleserv.qrCode.entity.NextBatchReminder;
+import com.eleserv.qrCode.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.eleserv.qrCode.entity.Dispatche;
 import org.springframework.data.jpa.repository.Modifying;
 import java.util.List;
 import java.util.Set;
@@ -28,4 +25,15 @@ public interface NextBatchReminderReposistory extends JpaRepository<NextBatchRem
     Set<Dispatche> getsechuledata(@Param("next_date") String next_date, @Param("next_date1") String next_date1);
     @Query(value ="select CONCAT( upper_aligner_from,  '-',upper_aligner_to,'U ',lower_aligner_from,  '-',lower_aligner_to,'L') as total_aligner from planning where planning_id=:planning_id ",nativeQuery = true)
     String getTotalAligners(@Param("planning_id") String planning_id);
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE cc_crm u set remark =:remark,starter_case_stage =:starter_case_stage,dispatchstrkit=now() where u.Case_Id = :Case_Id", nativeQuery = true)
+    int updateCC_CRM_StarterKit_Dispatch(@Param("remark") String remark,@Param("starter_case_stage") String starter_case_stage, @Param("Case_Id") Long Case_Id);
+    //remark='Test Remark',starter_case_stage='DPHSTRKIT',dispatchstrkit=now()
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE cc_crm u set remark =:remark,case_stage =:case_stage,dispatch=now() where u.Case_Id = :Case_Id", nativeQuery = true)
+    int updateCC_CRM_Dispatch(@Param("remark") String remark,@Param("case_stage") String case_stage, @Param("Case_Id") Long Case_Id);
+    @Query(value = "Call NEXT_BATCH_REPORT(?1,?2,?3)", nativeQuery = true)
+    List<NextBatchReport> getNextBatchReport(String Case_Type, String FromDate, String ToDate);
 }

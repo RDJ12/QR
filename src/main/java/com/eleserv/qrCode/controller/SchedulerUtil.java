@@ -55,7 +55,8 @@ public class SchedulerUtil {
     private SendEmailService sendEmailService;
     @Autowired
     private NextBatchReminderService nextBatchReminderService;
-    @Scheduled(cron = "0 58 01 ? * *")
+    @Scheduled(cron = "0 19 01 ? * *")
+    //@Scheduled(cron = "0 39 18 ? * *")
     public void sendmail() throws IOException {
         nextBatchReminderService.getALLDispatched();
         nextBatchReminderService.sendMailWorkflow();
